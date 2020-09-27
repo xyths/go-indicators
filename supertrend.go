@@ -1,6 +1,9 @@
 package indicator
 
-import "github.com/markcheno/go-talib"
+import (
+	"github.com/markcheno/go-talib"
+	"math"
+)
 
 // Supertrend V1.0 - Buy or Sell Signal
 // https://cn.tradingview.com/chart/5wBFaZWw/
@@ -18,30 +21,23 @@ func SuperTrend(factor float64, period int, inHigh, inLow, inClose []float64) ([
 	trendDown := make([]float64, l)
 	trend := make([]bool, l)
 	tsl := make([]float64, l)
-	color := make([]bool, l)
 	for i := 0; i < l; i++ {
 		up[i] = hl2[i] - atr[i]*factor
 		down[i] = hl2[i] + atr[i]*factor
 		if i == 0 {
+			trendUp[i] = up[i]
+			trendDown[i] = down[i]
 			trend[i] = true
-			color[i] = true
+			tsl[i] = trendUp[i]
 			continue
 		}
 		if inClose[i-1] > trendUp[i-1] {
-			if up[i] >= trendUp[i-1] {
-				trendUp[i] = up[i]
-			} else {
-				trendUp[i] = trendUp[i-1]
-			}
+			trendUp[i] = math.Max(up[i], trendUp[i-1])
 		} else {
 			trendUp[i] = up[i]
 		}
 		if inClose[i-1] < trendDown[i-1] {
-			if down[i] <= trendDown[i-1] {
-				trendDown[i] = down[i]
-			} else {
-				trendDown[i] = trendDown[i-1]
-			}
+			trendDown[i] = math.Min(down[i], trendDown[i-1])
 		} else {
 			trendDown[i] = down[i]
 		}
@@ -56,10 +52,8 @@ func SuperTrend(factor float64, period int, inHigh, inLow, inClose []float64) ([
 
 		if trend[i] {
 			tsl[i] = trendUp[i]
-			color[i] = true
 		} else {
 			tsl[i] = trendDown[i]
-			color[i] = false
 		}
 	}
 

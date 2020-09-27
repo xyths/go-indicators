@@ -24,21 +24,16 @@ func SqueezeMomentum(bbl, kcl int, bbf, kcf float64, inHigh, inLow, inClose []fl
 	upperKC := talib.Add(ma, rangeMa)
 	lowerKC := talib.Sub(ma, rangeMa)
 
-	on := make([]bool, len(inHigh))
-	off := make([]bool, len(inHigh))
-	no := make([]bool, len(inHigh))
+	squeezeOn := make([]bool, len(inHigh))
+	squeezeOff := make([]bool, len(inHigh))
+	noSqueeze := make([]bool, len(inHigh))
 	for i := 0; i < len(upperBB); i++ {
-		if lowerBB[i] > lowerKC[i] && upperBB[i] < upperKC[i] {
-			// bb inside kc
-			on[i] = true
-		}
-		if lowerBB[i] < lowerKC[i] && upperBB[i] > upperKC[i] {
-			// kc inside bb
-			off[i] = true
-		}
-		if !on[i] && !off[i] {
-			no[i] = true
-		}
+		// bb inside kc
+		squeezeOn[i] = lowerBB[i] > lowerKC[i] && upperBB[i] < upperKC[i]
+		// kc inside bb
+		squeezeOff[i] = lowerBB[i] < lowerKC[i] && upperBB[i] > upperKC[i]
+
+		noSqueeze[i] = !squeezeOn[i] && !squeezeOff[i]
 	}
 	maxHigh := talib.Max(inHigh, kcl)
 	minLow := talib.Min(inLow, kcl)
@@ -46,5 +41,14 @@ func SqueezeMomentum(bbl, kcl int, bbf, kcf float64, inHigh, inLow, inClose []fl
 	avg2 := talib.MedPrice(avg1, basis)
 	target := talib.Sub(inClose, avg2)
 	val := talib.LinearReg(target, kcl)
-	return val, on, off, no
+	return val, squeezeOn, squeezeOff, noSqueeze
 }
+//
+//func Squeeze(bbl, kcl int, bbf, kcf float64, inHigh, inLow, inClose []float64) ([]float64, []bool, []bool, []bool) {
+//	val, squeezeOn, squeezeOff, noSqueeze := SqueezeMomentum(bbl, kcl, bbf, kcf, inHigh, inLow, inClose)
+//
+//}
+//
+//func SqueezeTrend(val []float64, squeezeOn, squeezeOff, noSqueeze []bool, []bool, []bool) (compression int, ) {
+//
+//}
