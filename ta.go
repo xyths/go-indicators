@@ -10,11 +10,9 @@ func Multiply(source []float64, multiplier float64) []float64 {
 	return ret
 }
 
-func Keltner(period int, multiply float64, inHigh, inLow, inClose []float64) (mean, upper, lower []float64) {
-	atr := talib.Atr(inHigh, inLow, inClose, period)
-	mean = talib.Ema(inClose, 13)
-	atr = Multiply(atr, multiply)
-	upper = talib.Add(mean, atr)
-	lower = talib.Sub(mean, atr)
+func Keltner(factor float64, mean, atr []float64) (upper, lower []float64) {
+	atr2 := Multiply(atr, factor)
+	upper = talib.Add(mean, atr2)
+	lower = talib.Sub(mean, atr2)
 	return
 }
