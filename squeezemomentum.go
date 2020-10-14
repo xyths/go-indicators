@@ -38,7 +38,7 @@ func SqueezeMomentum(bbl, kcl int, bbf, kcf float64, inHigh, inLow, inClose []fl
 	maxHigh := talib.Max(inHigh, kcl)
 	minLow := talib.Min(inLow, kcl)
 	avg1 := talib.MedPrice(maxHigh, minLow)
-	avg2 := talib.MedPrice(avg1, basis)
+	avg2 := talib.MedPrice(avg1, ma)
 	target := talib.Sub(inClose, avg2)
 	val := talib.LinearReg(target, kcl)
 	return val, squeezeOn, squeezeOff, noSqueeze
