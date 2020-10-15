@@ -105,6 +105,10 @@ func Summary(d Detail) (r Result) {
 			firstGrayIndex = i
 		}
 		isUptrend := d.Value[firstGrayIndex] > 0
+		if !isUptrend && firstGrayIndex > 0 {
+			// hist below zero, but growing
+			isUptrend = d.Value[firstGrayIndex] > d.Value[firstGrayIndex-1]
+		}
 		trendStopped := false
 		stopIndex := 0
 		for i := firstGrayIndex; i <= current; i++ {
