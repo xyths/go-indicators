@@ -72,6 +72,9 @@ func Squeeze(bbl, kcl int, bbf, kcf float64, inHigh, inLow, inClose []float64) (
 	d.KCUpper = upperKC
 	d.KCMiddle = ma
 	d.KCLower = lowerKC
+	d.BBUpper = upperBB
+	d.BBMiddle = basis
+	d.BBLower = lowerBB
 	r = Summary(d)
 	return
 }
