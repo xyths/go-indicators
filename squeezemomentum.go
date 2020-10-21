@@ -81,9 +81,13 @@ func Squeeze(bbl, kcl int, bbf, kcf float64, inHigh, inLow, inClose []float64) (
 
 func Summary(d Detail) (r Result) {
 	l := len(d.Value)
-	current := l - 2
 	if l < 3 {
 		return
+	}
+	current := l - 2
+	first := current
+	for i := current; i >= 0 && !d.NoSqueeze[i]; i-- {
+		first = i
 	}
 	if d.NoSqueeze[current] {
 		return
@@ -92,7 +96,7 @@ func Summary(d Detail) (r Result) {
 	if d.SqueezeOn[current] {
 		// count the dark cross
 		last := 0
-		for i := current; i >= 0 && d.SqueezeOn[i]; i-- {
+		for i := current; i >= first && d.SqueezeOn[i]; i-- {
 			last++
 		}
 		r.Trend = 1 // squeeze
@@ -101,7 +105,7 @@ func Summary(d Detail) (r Result) {
 	} else {
 		// find first gray cross
 		firstGrayIndex := 0
-		for i := current; i >= 0 && !d.SqueezeOn[i]; i-- {
+		for i := current; i >= first && !d.SqueezeOn[i]; i-- {
 			firstGrayIndex = i
 		}
 		isUptrend := d.Value[firstGrayIndex] > 0
