@@ -92,7 +92,7 @@ func Summary(d Detail) (r Result) {
 	if d.SqueezeOn[current] {
 		// count the dark cross
 		last := 0
-		for i := current; d.SqueezeOn[i] && i >= 0; i-- {
+		for i := current; i >= 0 && d.SqueezeOn[i]; i-- {
 			last++
 		}
 		r.Trend = 1 // squeeze
@@ -101,7 +101,7 @@ func Summary(d Detail) (r Result) {
 	} else {
 		// find first gray cross
 		firstGrayIndex := 0
-		for i := current; !d.SqueezeOn[i] && i >= 0; i-- {
+		for i := current; i >= 0 && !d.SqueezeOn[i]; i-- {
 			firstGrayIndex = i
 		}
 		isUptrend := d.Value[firstGrayIndex] > 0
