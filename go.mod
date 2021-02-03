@@ -1,6 +1,6 @@
 module github.com/xyths/go-indicators
 
-go 1.14
+go 1.16
 
 require (
 	github.com/markcheno/go-talib v0.0.0-20190307022042-cd53a9264d70

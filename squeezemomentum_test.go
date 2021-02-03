@@ -30,16 +30,16 @@ func TestSqueezeMomentum(t *testing.T) {
 		close1[i-1], _ = strconv.ParseFloat(records[i][4], 0)
 	}
 
-	ttm, on, off, no := SqueezeMomentum(20, 20, 2, 1.5, high, low, close1)
+	_, detail := Squeeze(20, 20, 2, 1.5, high, low, close1)
 
 	secondsEastOfUTC := int((8 * time.Hour).Seconds())
 	beijing := time.FixedZone("Beijing Time", secondsEastOfUTC)
 	layout := "2006-01-02 15:04:05"
-	for i := 0; i < len(ttm); i++ {
+	for i := 0; i < len(detail.Value); i++ {
 		t.Logf(
 			"%s %f %f %f %f - %f %v %v %v",
 			time.Unix(timestamp[i], 0).In(beijing).Format(layout),
-			open[i], high[i], low[i], close1[i], ttm[i], on[i], off[i], no[i],
+			open[i], high[i], low[i], close1[i], detail.Value[i], detail.SqueezeOn[i], detail.SqueezeOff[i], detail.NoSqueeze[i],
 		)
 	}
 }
